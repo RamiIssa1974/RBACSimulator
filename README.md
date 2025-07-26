@@ -8,12 +8,22 @@ A lightweight **Role-Based Access Control (RBAC)** simulator written in modern *
 
 ## 🛠 Features
 
-- ✅ Define users, roles, and permissions
-- ✅ Assign roles to users
-- ✅ Check if a user has a specific permission (even across multiple roles)
-- ✅ Save/load the system state to/from a JSON file
-- ✅ Multi-threaded permission checks with `std::mutex` protection
-- ✅ Clean and modular structure using `std::map`, `std::vector`, and `std::string`
+- ✅ Object-Oriented design: `User`, `Role`, `Permission` with clear responsibilities
+- ✅ Role assignment and permission validation
+- ✅ JSON save/load using `nlohmann/json`
+- ✅ Thread-safe access using `std::mutex` and `std::lock_guard`
+- ✅ Smart memory management with `std::shared_ptr`
+- ✅ Polymorphic permission evaluation using `IPermissionEvaluator` interface
+- ✅ Easy to extend: plug new permission rules without changing core logic
+- ✅ Multithreaded permission checks using `std::thread`
+
+## 💡 Design Concepts Demonstrated
+
+- **RAII (Resource Acquisition Is Initialization)**: used in file streams, mutex management, and smart pointers
+- **Polymorphism via interface**: permission logic is decoupled using a virtual evaluator strategy
+- **Thread safety**: all shared data structures are protected using `std::mutex` and `lock_guard`
+- **Modern C++ principles**: use of `shared_ptr`, range-based loops, auto, and STL containers
+- **Clean architecture**: logic separated into small, testable components
 
 ---
 
