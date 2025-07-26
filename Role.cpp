@@ -20,7 +20,8 @@ const std::vector<std::string>& Role::getPermissions() const {
 }
 
 void Role::addPermission(const std::string& permissionId) {
-    permissionIds.push_back(permissionId);
+    if (std::find(permissionIds.begin(), permissionIds.end(), permissionId) == permissionIds.end())
+        permissionIds.push_back(permissionId);
 }
 
 void Role::removePermission(const std::string& permissionId) {

@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AccessManager.cpp" />
+    <ClCompile Include="DataStore.cpp" />
     <ClCompile Include="Permission.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Role.cpp" />
@@ -135,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AccessManager.h" />
+    <ClInclude Include="DataStore.h" />
     <ClInclude Include="Permission.h" />
     <ClInclude Include="Role.h" />
     <ClInclude Include="User.h" />

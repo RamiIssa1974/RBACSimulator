@@ -5,44 +5,73 @@
 #include "Role.h"
 #include "User.h"
 #include "AccessManager.h"
+#include "nlohmann/json.hpp"
+#include "DataStore.h"
+using json = nlohmann::json;
+
 using namespace std;
+std::mutex coutMutex;
+
+void checkPermission(AccessManager& manager,
+	const std::string& userId,
+	const std::string& permissionId) {
+	
+	std::lock_guard<std::mutex> lock(coutMutex);
+	bool has = manager.userHasPermission(userId, permissionId);
+	std::cout << "Thread: User " << userId
+		<< (has ? " HAS " : " DOES NOT HAVE ")
+		<< "permission " << permissionId << endl;
+}
 
 int main()
 {
-    AccessManager manager;
+	AccessManager manager;
+	const string dsfilename = "c:\\Temp\\RBACSimulator\\data.json";
+	DataStore::loadFromFile(dsfilename, manager);
 
-    manager.addPermission(Permission("read", "Read data"));
-    manager.addPermission(Permission("write", "Write data"));
+	std::thread t1(checkPermission, std::ref(manager), "0263", "read");
+	std::thread t2(checkPermission, std::ref(manager), "0263", "write");
+	std::thread t3(checkPermission, std::ref(manager), "0263", "admin");
 
-    Role writer("100", "Writer");
-    writer.addPermission("read");
-    writer.addPermission("write");
+	t1.join();
+	t2.join();
+	t3.join();
+	
+	auto dsUser = manager.getUser("0263");
+	if (dsUser == nullptr) {
+		Permission p("read", "Can read");
+		manager.addPermission(p);
+		Role r("101", "Reader");
+		r.addPermission("read");
+		manager.addRole(r);
+		User u("0263", "Rami");
+		u.addRole("101");
+		manager.addUser(u);
 
-    manager.addRole(writer);
+		DataStore::saveToFile(dsfilename, manager);
+	}
+	else if (!manager.userHasPermission("0263", "write")) {
+		Permission per("write", "can write");
+		manager.addPermission(per);
 
-    User rami("0263", "Rami Issa");
-    rami.addRole("100");
+		Role role("100", "Writer");
+		role.addPermission("write");
+		manager.addRole(role);
+		dsUser->addRole("100");
+		DataStore::saveToFile(dsfilename, manager);
+	}
 
-    manager.addUser(rami);
 
-    if (manager.userHasPermission("0263", "write")) {
-        std::cout << "User " << manager.getUser("0263")->getName() << " has WRITE permission\n";
-    }
-    else {
-        std::cout << "User does NOT have WRITE permission\n";
-    }
 
-    
-    cin.get();
+
+	if (manager.userHasPermission("0263", "write")) {
+		std::cout << "User " << manager.getUser("0263")->getName() << " has WRITE permission\n";
+	}
+	else {
+		std::cout << "User does NOT have WRITE permission\n";
+	}
+
+
+	cin.get();
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

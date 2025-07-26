@@ -13,6 +13,8 @@ void AccessManager::addPermission(const Permission& permission) {
 }
 
 bool AccessManager::userHasPermission(const std::string& userId, const std::string& permissionId) const {
+    std::lock_guard<std::mutex> lock(accessMutex);
+
     auto userIt = users.find(userId);
     if (userIt == users.end()) return false;
 
@@ -44,3 +46,16 @@ Permission* AccessManager::getPermission(const std::string& permissionId) {
     auto it = permissions.find(permissionId);
     return (it != permissions.end()) ? &(it->second) : nullptr;
 }
+
+const std::map<std::string, User>& AccessManager::getAllUsers() const {
+    return users;
+}
+
+const std::map<std::string, Role>& AccessManager::getAllRoles() const {
+    return roles;
+}
+
+const std::map<std::string, Permission>& AccessManager::getAllPermissions() const {
+    return permissions;
+}
+

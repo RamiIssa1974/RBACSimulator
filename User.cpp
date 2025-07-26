@@ -20,7 +20,8 @@ const std::vector<std::string>& User::getRoles() const {
 }
 
 void User::addRole(const std::string& roleId) {
-    roleIds.push_back(roleId);
+    if (std::find(roleIds.begin(), roleIds.end(), roleId) == roleIds.end())
+        roleIds.push_back(roleId);
 }
 
 void User::removeRole(const std::string& roleId) {
