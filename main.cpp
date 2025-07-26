@@ -7,6 +7,7 @@
 #include "AccessManager.h"
 #include "nlohmann/json.hpp"
 #include "DataStore.h"
+#include "SimplePermissionEvaluator.h"
 using json = nlohmann::json;
 
 using namespace std;
@@ -17,7 +18,9 @@ void checkPermission(AccessManager& manager,
 	const std::string& permissionId) {
 	
 	std::lock_guard<std::mutex> lock(coutMutex);
-	bool has = manager.userHasPermission(userId, permissionId);
+	SimplePermissionEvaluator evaluator;
+
+	bool has = manager.userHasPermission(userId, permissionId, evaluator);
 	std::cout << "Thread: User " << userId
 		<< (has ? " HAS " : " DOES NOT HAVE ")
 		<< "permission " << permissionId << endl;
@@ -25,6 +28,7 @@ void checkPermission(AccessManager& manager,
 
 int main()
 {
+	SimplePermissionEvaluator evaluator;
 	AccessManager manager;
 	const string dsfilename = "c:\\Temp\\RBACSimulator\\data.json";
 	DataStore::loadFromFile(dsfilename, manager);
@@ -50,7 +54,7 @@ int main()
 
 		DataStore::saveToFile(dsfilename, manager);
 	}
-	else if (!manager.userHasPermission("0263", "write")) {
+	else if (!manager.userHasPermission("0263", "write", evaluator)) {
 		Permission per("write", "can write");
 		manager.addPermission(per);
 
@@ -64,7 +68,7 @@ int main()
 
 
 
-	if (manager.userHasPermission("0263", "write")) {
+	if (manager.userHasPermission("0263", "write", evaluator)) {
 		std::cout << "User " << manager.getUser("0263")->getName() << " has WRITE permission\n";
 	}
 	else {

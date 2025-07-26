@@ -133,13 +133,16 @@
     <ClCompile Include="Permission.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Role.cpp" />
+    <ClCompile Include="SimplePermissionEvaluator.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AccessManager.h" />
     <ClInclude Include="DataStore.h" />
+    <ClInclude Include="IPermissionEvaluator.h" />
     <ClInclude Include="Permission.h" />
     <ClInclude Include="Role.h" />
+    <ClInclude Include="SimplePermissionEvaluator.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

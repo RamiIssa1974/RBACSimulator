@@ -1,30 +1,38 @@
 #include "AccessManager.h"
 
-void AccessManager::addUser(const User& user) {
-    users[user.getId()] = user;
+void AccessManager::addUser(const User& user) {    
+    users[user.getId()] = make_shared<User>(user);
 }
 
 void AccessManager::addRole(const Role& role) {
-    roles[role.getId()] = role;
+    roles[role.getId()] = make_shared<Role>(role);
 }
 
 void AccessManager::addPermission(const Permission& permission) {
-    permissions[permission.getId()] = permission;
+    permissions[permission.getId()] = make_shared<Permission>(permission);
 }
 
-bool AccessManager::userHasPermission(const std::string& userId, const std::string& permissionId) const {
+bool AccessManager::userHasPermission(
+    const std::string& userId,
+    const std::string& permissionId,
+    const IPermissionEvaluator& evaluator) const {
+
     std::lock_guard<std::mutex> lock(accessMutex);
 
     auto userIt = users.find(userId);
     if (userIt == users.end()) return false;
+    auto user = userIt->second;
 
-    const User& user = userIt->second;
-    for (const std::string& roleId : user.getRoles()) {
+    auto permIt = permissions.find(permissionId);
+    if (permIt == permissions.end()) return false;
+    auto permission = permIt->second;
+
+    for (const std::string& roleId : user->getRoles()) {
         auto roleIt = roles.find(roleId);
         if (roleIt != roles.end()) {
-            const Role& role = roleIt->second;
-            for (const std::string& pId : role.getPermissions()) {
-                if (pId == permissionId) return true;
+            auto role = roleIt->second;
+            if (evaluator.evaluate(*user, *role, *permission)) {
+                return true;
             }
         }
     }
@@ -32,30 +40,30 @@ bool AccessManager::userHasPermission(const std::string& userId, const std::stri
     return false;
 }
 
-User* AccessManager::getUser(const std::string& userId) {
+shared_ptr<User> AccessManager::getUser(const std::string& userId) {
     auto it = users.find(userId);
-    return (it != users.end()) ? &(it->second) : nullptr;
+    return (it != users.end()) ? it->second : nullptr;
 }
 
-Role* AccessManager::getRole(const std::string& roleId) {
+shared_ptr<Role> AccessManager::getRole(const std::string& roleId) {
     auto it = roles.find(roleId);
-    return (it != roles.end()) ? &(it->second) : nullptr;
+    return (it != roles.end()) ? it->second : nullptr;
 }
 
-Permission* AccessManager::getPermission(const std::string& permissionId) {
+shared_ptr<Permission> AccessManager::getPermission(const std::string& permissionId) {
     auto it = permissions.find(permissionId);
-    return (it != permissions.end()) ? &(it->second) : nullptr;
+    return (it != permissions.end()) ? it->second : nullptr;
 }
 
-const std::map<std::string, User>& AccessManager::getAllUsers() const {
+const map<string, shared_ptr<User>>& AccessManager::getAllUsers() const {
     return users;
 }
 
-const std::map<std::string, Role>& AccessManager::getAllRoles() const {
+const std::map<string, shared_ptr<Role>>& AccessManager::getAllRoles() const {
     return roles;
 }
 
-const std::map<std::string, Permission>& AccessManager::getAllPermissions() const {
+const std::map<string, shared_ptr<Permission>>& AccessManager::getAllPermissions() const {
     return permissions;
 }
 

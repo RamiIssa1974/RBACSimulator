@@ -9,39 +9,40 @@ void DataStore::saveToFile(const std::string& filename, const AccessManager& man
 
     // Save users
     for (const auto& pair : manager.getAllUsers()) {
-        const User& user = pair.second;
+        const auto& user = pair.second;
         j["users"].push_back({
-            {"id", user.getId()},
-            {"name", user.getName()},
-            {"roles", user.getRoles()}
+            {"id", user->getId()},
+            {"name", user->getName()},
+            {"roles", user->getRoles()}
             });
     }
 
     // Save roles
     for (const auto& pair : manager.getAllRoles()) {
-        const Role& role = pair.second;
+        const auto& role = pair.second;
+        
         j["roles"].push_back({
-            {"id", role.getId()},
-            {"name", role.getName()},
-            {"permissions", role.getPermissions()}
+            {"id", role->getId()},
+            {"name", role->getName()},
+            {"permissions", role->getPermissions()}
             });
     }
 
     // Save permissions
     for (const auto& pair : manager.getAllPermissions()) {
-        const Permission& p = pair.second;
+        const auto& p = pair.second;
         j["permissions"].push_back({
-            {"id", p.getId()},
-            {"description", p.getDescription()}
+            {"id", p->getId()},
+            {"description", p->getDescription()}
             });
     }
 
-    std::ofstream file(filename);
+    ofstream file(filename);
     file << j.dump(4);
 }
 
 void DataStore::loadFromFile(const std::string& filename, AccessManager& manager) {
-    std::ifstream file(filename);
+    ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "? Failed to open file: " << filename << std::endl;
         return;
