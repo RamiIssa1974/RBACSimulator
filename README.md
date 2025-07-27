@@ -75,11 +75,15 @@ Thread: User 0263 DOES NOT HAVE permission admin
    g++ -std=c++11 *.cpp -o rbac
   ./rbac
 
+### 🔁 Cycle Detection in Role Inheritance
 
+To prevent infinite loops and logical errors, the system includes a role inheritance validator.
+Roles may inherit permissions from other roles. However, if a circular dependency is formed (e.g. Role A inherits from Role B, and Role B inherits from Role A), permission evaluation could loop endlessly.
+The class `RoleCycleDetector` implements a **DFS-based graph cycle detection algorithm** to identify such cycles and ensure the role structure remains a directed acyclic graph (DAG).
+
+### Rami Issa:
 This project was created to demonstrate my ability to design real-world C++ systems, including:
-
 Clean object-oriented modeling
-
 Thread safety
 
 Data persistence
