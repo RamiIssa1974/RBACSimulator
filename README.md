@@ -24,6 +24,8 @@ A lightweight **Role-Based Access Control (RBAC)** simulator written in modern *
 - **Thread safety**: all shared data structures are protected using `std::mutex` and `lock_guard`
 - **Modern C++ principles**: use of `shared_ptr`, range-based loops, auto, and STL containers
 - **Clean architecture**: logic separated into small, testable components
+- **C++ Templates**: Generic class `PermissionSet<T>` used within `Role` to handle permission IDs
+
 
 ---
 
