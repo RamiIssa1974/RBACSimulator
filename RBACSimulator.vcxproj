@@ -141,6 +141,7 @@
     <ClInclude Include="DataStore.h" />
     <ClInclude Include="IPermissionEvaluator.h" />
     <ClInclude Include="Permission.h" />
+    <ClInclude Include="PermissionSet.h" />
     <ClInclude Include="Role.h" />
     <ClInclude Include="SimplePermissionEvaluator.h" />
     <ClInclude Include="User.h" />

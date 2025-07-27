@@ -8,10 +8,13 @@
 #include "nlohmann/json.hpp"
 #include "DataStore.h"
 #include "SimplePermissionEvaluator.h"
+#include "PermissionSet.h"
 using json = nlohmann::json;
 
 using namespace std;
 std::mutex coutMutex;
+ 
+ 
 
 void checkPermission(AccessManager& manager,
 	const std::string& userId,
@@ -27,7 +30,10 @@ void checkPermission(AccessManager& manager,
 }
 
 int main()
-{
+{ 
+	cin.get();
+	return 0;
+
 	SimplePermissionEvaluator evaluator;
 	AccessManager manager;
 	const string dsfilename = "c:\\Temp\\RBACSimulator\\data.json";

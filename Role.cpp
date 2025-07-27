@@ -11,22 +11,20 @@ std::string Role::getName() const {
     return name;
 }
 
-void Role::setName(const std::string& newName) {
+void Role::setName(const string& newName) {
     name = newName;
 }
 
-const std::vector<std::string>& Role::getPermissions() const {
-    return permissionIds;
+const set<string>& Role::getPermissions() const {
+    return permissions.getAll();
+
 }
 
-void Role::addPermission(const std::string& permissionId) {
-    if (std::find(permissionIds.begin(), permissionIds.end(), permissionId) == permissionIds.end())
-        permissionIds.push_back(permissionId);
+void Role::addPermission(const string& permissionId) {
+    permissions.add(permissionId);
+
 }
 
-void Role::removePermission(const std::string& permissionId) {
-    permissionIds.erase(
-        std::remove(permissionIds.begin(), permissionIds.end(), permissionId),
-        permissionIds.end()
-    );
+void Role::removePermission(const string& permissionId) {
+    permissions.remove(permissionId);
 }

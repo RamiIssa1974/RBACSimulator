@@ -1,22 +1,24 @@
 #pragma once
 #include <string>
-#include <vector>
-
+#include <set>
+#include "PermissionSet.h"
+ 
+using namespace std;
 class Role {
 private:
-    std::string id;
-    std::string name;
-    std::vector<std::string> permissionIds;
+    string id;
+    string name;
+    PermissionSet<string> permissions;
 
 public:
     Role() = default;
-    Role(const std::string& id, const std::string& name);
+    Role(const string& id, const string& name);
 
-    std::string getId() const;
-    std::string getName() const;
-    void setName(const std::string& newName);
+    string getId() const;
+    string getName() const;
+    void setName(const string& newName);
 
-    const std::vector<std::string>& getPermissions() const;
-    void addPermission(const std::string& permissionId);
-    void removePermission(const std::string& permissionId);
+    const set<string>& getPermissions() const;
+    void addPermission(const string& permissionId);
+    void removePermission(const string& permissionId);
 };
