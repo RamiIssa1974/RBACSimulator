@@ -26,7 +26,7 @@ public:
         const IPermissionEvaluator& evaluator) const;
 
     shared_ptr<User> getUser(const string& userId);
-    shared_ptr<Role> getRole(const string& roleId);
+    shared_ptr<Role> getRole(const string& roleId) const;
     shared_ptr<Permission> getPermission(const std::string& permissionId);
 
     const map<string, shared_ptr<User>>& getAllUsers() const;

@@ -133,6 +133,7 @@
     <ClCompile Include="Permission.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Role.cpp" />
+    <ClCompile Include="RoleCycleDetector.cpp" />
     <ClCompile Include="SimplePermissionEvaluator.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
@@ -143,6 +144,7 @@
     <ClInclude Include="Permission.h" />
     <ClInclude Include="PermissionSet.h" />
     <ClInclude Include="Role.h" />
+    <ClInclude Include="RoleCycleDetector.h" />
     <ClInclude Include="SimplePermissionEvaluator.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>

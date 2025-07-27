@@ -1,13 +1,13 @@
 #include "Role.h"
 #include <algorithm>
 
-Role::Role(const std::string& id, const std::string& name) : id(id), name(name) {}
+Role::Role(const string& id, const string& name) : id(id), name(name) {}
 
-std::string Role::getId() const {
+string Role::getId() const {
     return id;
 }
 
-std::string Role::getName() const {
+string Role::getName() const {
     return name;
 }
 
@@ -28,3 +28,14 @@ void Role::addPermission(const string& permissionId) {
 void Role::removePermission(const string& permissionId) {
     permissions.remove(permissionId);
 }
+
+void Role::addInheritedRole(const string& roleId) {
+    if (find(inheritedRoleIds.begin(), inheritedRoleIds.end(), roleId) == inheritedRoleIds.end()) {
+        inheritedRoleIds.push_back(roleId);
+    }
+}
+
+const vector<string>& Role::getInheritedRoles() const {
+    return inheritedRoleIds;
+}
+

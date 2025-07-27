@@ -1,4 +1,4 @@
-// RBACSimulator.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿// RBACSimulator.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
@@ -9,39 +9,60 @@
 #include "DataStore.h"
 #include "SimplePermissionEvaluator.h"
 #include "PermissionSet.h"
+#include "RoleCycleDetector.h"
 using json = nlohmann::json;
 
 using namespace std;
-std::mutex coutMutex;
+mutex coutMutex;
  
  
 
 void checkPermission(AccessManager& manager,
-	const std::string& userId,
-	const std::string& permissionId) {
+	const string& userId,
+	const string& permissionId) {
 	
-	std::lock_guard<std::mutex> lock(coutMutex);
+	lock_guard<mutex> lock(coutMutex);
 	SimplePermissionEvaluator evaluator;
 
 	bool has = manager.userHasPermission(userId, permissionId, evaluator);
-	std::cout << "Thread: User " << userId
+	cout << "Thread: User " << userId
 		<< (has ? " HAS " : " DOES NOT HAVE ")
 		<< "permission " << permissionId << endl;
 }
 
 int main()
 { 
+	AccessManager manager;
+
+	Role admin("admin", "Administrator");
+	admin.addPermission("manage");
+	admin.addInheritedRole("writer");
+
+	Role writer("writer", "Writer");
+	writer.addPermission("write");
+	// writer.addInheritedRole("admin");  // נסה להפעיל את זה כדי ליצור מעגל
+
+	manager.addRole(admin);
+	manager.addRole(writer);
+
+	if (RoleCycleDetector::hasCycle(manager)) {
+		cout << "Cycle detected in role inheritance!" << endl;
+	}
+	else {
+		cout << "No cycles in role inheritance." << endl;
+	}
+
 	cin.get();
 	return 0;
 
 	SimplePermissionEvaluator evaluator;
-	AccessManager manager;
+	
 	const string dsfilename = "c:\\Temp\\RBACSimulator\\data.json";
 	DataStore::loadFromFile(dsfilename, manager);
 
-	std::thread t1(checkPermission, std::ref(manager), "0263", "read");
-	std::thread t2(checkPermission, std::ref(manager), "0263", "write");
-	std::thread t3(checkPermission, std::ref(manager), "0263", "admin");
+	thread t1(checkPermission, ref(manager), "0263", "read");
+	thread t2(checkPermission, ref(manager), "0263", "write");
+	thread t3(checkPermission, ref(manager), "0263", "admin");
 
 	t1.join();
 	t2.join();
@@ -75,10 +96,10 @@ int main()
 
 
 	if (manager.userHasPermission("0263", "write", evaluator)) {
-		std::cout << "User " << manager.getUser("0263")->getName() << " has WRITE permission\n";
+		cout << "User " << manager.getUser("0263")->getName() << " has WRITE permission\n";
 	}
 	else {
-		std::cout << "User does NOT have WRITE permission\n";
+		cout << "User does NOT have WRITE permission\n";
 	}
 
 

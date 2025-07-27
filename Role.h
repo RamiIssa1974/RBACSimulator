@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <set>
+#include <vector>
 #include "PermissionSet.h"
  
 using namespace std;
@@ -9,6 +10,8 @@ private:
     string id;
     string name;
     PermissionSet<string> permissions;
+    vector<string> inheritedRoleIds;
+
 
 public:
     Role() = default;
@@ -21,4 +24,7 @@ public:
     const set<string>& getPermissions() const;
     void addPermission(const string& permissionId);
     void removePermission(const string& permissionId);
+
+    void addInheritedRole(const std::string& roleId);
+    const std::vector<std::string>& getInheritedRoles() const;
 };

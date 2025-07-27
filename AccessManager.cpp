@@ -45,7 +45,7 @@ shared_ptr<User> AccessManager::getUser(const std::string& userId) {
     return (it != users.end()) ? it->second : nullptr;
 }
 
-shared_ptr<Role> AccessManager::getRole(const std::string& roleId) {
+shared_ptr<Role> AccessManager::getRole(const std::string& roleId) const {
     auto it = roles.find(roleId);
     return (it != roles.end()) ? it->second : nullptr;
 }
